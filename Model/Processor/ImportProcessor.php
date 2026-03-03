@@ -7,7 +7,6 @@
 namespace Semaio\ConfigImportExport\Model\Processor;
 
 use Magento\Config\App\Config\Type\System;
-use Magento\Deploy\Model\DeploymentConfig\Hash;
 use Magento\Framework\App\Config\ConfigPathResolver;
 use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\App\DeploymentConfig\Writer as DeploymentConfigWriter;
@@ -83,18 +82,12 @@ class ImportProcessor extends AbstractProcessor implements ImportProcessorInterf
     private $arrayManager;
 
     /**
-     * @var Hash
-     */
-    private $hash;
-
-    /**
      * @param WriterInterface         $configWriter
      * @param ScopeValidatorInterface $scopeValidator
      * @param ScopeConverterInterface $scopeConverter
      * @param DeploymentConfigWriter  $deploymentConfigWriter
      * @param ConfigPathResolver      $configPathResolver
      * @param ArrayManager            $arrayManager
-     * @param Hash                    $hash
      * @param ResolverInterface[]     $resolvers
      */
     public function __construct(
@@ -104,7 +97,6 @@ class ImportProcessor extends AbstractProcessor implements ImportProcessorInterf
         DeploymentConfigWriter $deploymentConfigWriter,
         ConfigPathResolver $configPathResolver,
         ArrayManager $arrayManager,
-        Hash $hash,
         array $resolvers = []
     ) {
         $this->configWriter = $configWriter;
@@ -113,7 +105,6 @@ class ImportProcessor extends AbstractProcessor implements ImportProcessorInterf
         $this->deploymentConfigWriter = $deploymentConfigWriter;
         $this->configPathResolver = $configPathResolver;
         $this->arrayManager = $arrayManager;
-        $this->hash = $hash;
         $this->resolvers = $resolvers;
     }
 
@@ -218,8 +209,6 @@ class ImportProcessor extends AbstractProcessor implements ImportProcessorInterf
             [ConfigFilePool::APP_CONFIG => $configArray],
             false
         );
-
-        $this->hash->regenerate(System::CONFIG_TYPE);
 
         $this->getOutput()->writeln(sprintf(
             '<info>%d %s locked in app/etc/config.php.</info>',
